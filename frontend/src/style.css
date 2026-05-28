@@ -1,0 +1,72 @@
+/* 智农粮 - 适老化大字体样式 */
+:root {
+  --znl-font-size: 18px;
+  --znl-title-size: 28px;
+  --znl-btn-size: 20px;
+  --znl-card-padding: 24px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: var(--znl-font-size);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 大字体全局覆盖 */
+.el-button {
+  font-size: var(--znl-btn-size) !important;
+  padding: 14px 28px !important;
+}
+
+.el-input__inner {
+  font-size: var(--znl-font-size) !important;
+  height: 48px !important;
+}
+
+.el-table {
+  font-size: 16px !important;
+}
+
+.el-card {
+  font-size: var(--znl-font-size) !important;
+}
+
+.el-form-item__label {
+  font-size: var(--znl-font-size) !important;
+}
+
+.el-dialog {
+  --el-dialog-content-font-size: var(--znl-font-size);
+}
+
+.el-statistic__number {
+  font-size: 36px !important;
+  font-weight: bold !important;
+}
+
+/* 高对比度 */
+.el-card,
+.el-table,
+.el-dialog {
+  border: 2px solid #dcdfe6 !important;
+}
+
+/* 页面标题 */
+.page-title {
+  font-size: var(--znl-title-size);
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #1a1a2e;
+}
