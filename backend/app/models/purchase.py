@@ -16,5 +16,5 @@ class Purchase(Base):
     total_amount = Column(Numeric(14, 2))
     status = Column(String(32), nullable=False, default="CREATED")
     deleted = Column(Boolean, default=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())

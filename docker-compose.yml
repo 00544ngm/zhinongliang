@@ -2,24 +2,26 @@ version: "3.8"
 
 services:
   db:
-    image: postgres:16-alpine
+    image: mysql:8.0
     environment:
-      POSTGRES_USER: znl
-      POSTGRES_PASSWORD: znl123
-      POSTGRES_DB: znl_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: znl_db
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
       - ./backup:/data/backup
     ports:
-      - "5432:5432"
+      - "3306:3306"
     restart: unless-stopped
 
   backend:
     build: ./backend
     environment:
       DB_HOST: db
-      DB_USER: znl
-      DB_PASSWORD: znl123
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
       DB_NAME: znl_db
     depends_on:
       - db
@@ -34,4 +36,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  pgdata:
+  mysql_data:

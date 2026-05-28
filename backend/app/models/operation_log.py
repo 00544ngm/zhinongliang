@@ -12,4 +12,4 @@ class OperationLog(Base):
     target_id = Column(BigInteger)
     old_data = Column(JSON)
     new_data = Column(JSON)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(DateTime, server_default=func.now())

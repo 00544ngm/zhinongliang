@@ -12,4 +12,4 @@ class Farmer(Base):
     total_weight = Column(Numeric(14, 2), default=0)
     total_amount = Column(Numeric(14, 2), default=0)
     deleted = Column(String(1), default="0")
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(DateTime, server_default=func.now())

@@ -7,9 +7,9 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     DB_HOST: str = "localhost"
-    DB_PORT: int = 5432
-    DB_USER: str = "znl"
-    DB_PASSWORD: str = "znl123"
+    DB_PORT: int = 3306
+    DB_USER: str = "root"
+    DB_PASSWORD: str = "root"
     DB_NAME: str = "znl_db"
 
     SECRET_KEY: str = "change-this-in-production-znl-2024"
@@ -20,7 +20,7 @@ class Settings(BaseSettings):
 
     @property
     def DATABASE_URL(self) -> str:
-        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        return f"mysql+aiomysql://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}?charset=utf8mb4"
 
     class Config:
         env_file = ".env"
