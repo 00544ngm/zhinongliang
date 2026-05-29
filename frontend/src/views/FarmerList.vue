@@ -43,10 +43,10 @@
             {{ row.total_amount }} 元
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="200">
+        <el-table-column label="操作" width="160">
           <template #default="{ row }">
-            <el-button size="small" @click="showDetail(row)">详情</el-button>
-            <el-button size="small" @click="editFarmer(row)">编辑</el-button>
+            <el-button size="small" type="primary" link @click="showDetail(row)">详情</el-button>
+            <el-button size="small" type="default" link @click="editFarmer(row)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
