@@ -1,7 +1,7 @@
 <template>
   <el-container style="min-height: 100vh">
-    <el-aside width="220px" style="background: #1a1a2e">
-      <div class="logo">智农粮</div>
+    <el-aside width="260px" style="background: #1a1a2e">
+      <div class="logo">马西军粮食收购站系统</div>
       <el-menu
         :default-active="route.path"
         router
@@ -69,10 +69,11 @@ function handleLogout() {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 22px;
   font-weight: bold;
   color: #ffd700;
-  letter-spacing: 4px;
+  letter-spacing: 2px;
+  white-space: nowrap;
 }
 
 .el-menu-item {
