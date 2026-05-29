@@ -1,4 +1,5 @@
-from sqlalchemy import Column, BigInteger, String, DateTime, JSON, func
+from datetime import datetime
+from sqlalchemy import Column, BigInteger, String, DateTime, JSON
 from app.models.base import Base
 
 
@@ -12,4 +13,4 @@ class OperationLog(Base):
     target_id = Column(BigInteger)
     old_data = Column(JSON)
     new_data = Column(JSON)
-    created_at = Column(DateTime, server_default=func.now())
+    created_at = Column(DateTime, default=datetime.now)

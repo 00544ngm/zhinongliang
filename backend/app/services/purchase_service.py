@@ -1,3 +1,4 @@
+from datetime import datetime
 from decimal import Decimal
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.purchase_repository import PurchaseRepository
@@ -57,14 +58,13 @@ class PurchaseService:
 
         old_status = purchase.status
         net_weight = purchase.gross_weight - empty_weight
-        jin_weight = net_weight * Decimal("2")
-        total_amount = jin_weight * purchase.unit_price
+        total_amount = net_weight * Decimal("2") * purchase.unit_price
 
         purchase.empty_weight = empty_weight
         purchase.net_weight = net_weight
-        purchase.jin_weight = jin_weight
         purchase.total_amount = total_amount
         purchase.status = "EMPTY_WEIGHTED"
+        purchase.empty_weighted_at = datetime.now()
 
         await self.db.flush()
 
@@ -92,6 +92,7 @@ class PurchaseService:
 
         old_status = purchase.status
         purchase.status = "COMPLETED"
+        purchase.completed_at = datetime.now()
         await self.db.flush()
 
         await self.inventory_service.add_stock(
@@ -102,7 +103,9 @@ class PurchaseService:
         if purchase.farmer_id:
             await self.farmer_service.update_stats(
                 farmer_id=purchase.farmer_id,
-                weight=purchase.net_weight,
+                gross_weight=purchase.gross_weight,
+                empty_weight=purchase.empty_weight,
+                net_weight=purchase.net_weight,
                 amount=purchase.total_amount,
             )
 

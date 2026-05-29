@@ -21,12 +21,13 @@ async def _purchase_to_response(purchase, db) -> dict:
         "gross_weight": purchase.gross_weight,
         "empty_weight": purchase.empty_weight,
         "net_weight": purchase.net_weight,
-        "jin_weight": purchase.jin_weight,
         "unit_price": purchase.unit_price,
         "total_amount": purchase.total_amount,
         "status": purchase.status,
         "created_at": purchase.created_at,
         "updated_at": purchase.updated_at,
+        "empty_weighted_at": purchase.empty_weighted_at,
+        "completed_at": purchase.completed_at,
     }
     if purchase.farmer_id:
         farmer = await FarmerService(db).get_by_id(purchase.farmer_id)

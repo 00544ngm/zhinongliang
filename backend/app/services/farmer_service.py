@@ -17,12 +17,14 @@ class FarmerService:
         farmer = Farmer(name=name)
         return await self.repo.add(farmer)
 
-    async def update_stats(self, farmer_id: int, weight: Decimal, amount: Decimal):
+    async def update_stats(self, farmer_id: int, gross_weight: Decimal, empty_weight: Decimal, net_weight: Decimal, amount: Decimal):
         await self.db.execute(
             update(Farmer)
             .where(Farmer.id == farmer_id)
             .values(
-                total_weight=Farmer.total_weight + weight,
+                total_gross_weight=Farmer.total_gross_weight + gross_weight,
+                total_empty_weight=Farmer.total_empty_weight + empty_weight,
+                total_weight=Farmer.total_weight + net_weight,
                 total_amount=Farmer.total_amount + amount,
             )
         )
@@ -38,7 +40,7 @@ class FarmerService:
         return await self.repo.get_by_id(farmer_id)
 
     async def update(self, farmer_id: int, name: str | None = None,
-                     phone: str | None = None, car_number: str | None = None) -> Farmer:
+                     phone: str | None = None, id_card: str | None = None) -> Farmer:
         farmer = await self.repo.get_by_id(farmer_id)
         if not farmer:
             raise ValueError("农户不存在")
@@ -46,7 +48,7 @@ class FarmerService:
             farmer.name = name
         if phone is not None:
             farmer.phone = phone
-        if car_number is not None:
-            farmer.car_number = car_number
+        if id_card is not None:
+            farmer.id_card = id_card
         await self.db.flush()
         return farmer

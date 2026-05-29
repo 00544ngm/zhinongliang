@@ -28,12 +28,13 @@ class PurchaseResponse(BaseModel):
     gross_weight: Decimal
     empty_weight: Optional[Decimal] = None
     net_weight: Optional[Decimal] = None
-    jin_weight: Optional[Decimal] = None
     unit_price: Decimal
     total_amount: Optional[Decimal] = None
     status: str
     created_at: datetime
     updated_at: datetime
+    empty_weighted_at: Optional[datetime] = None
+    completed_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True
