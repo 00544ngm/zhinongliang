@@ -54,6 +54,21 @@
             {{ row.total_amount || '-' }} 元
           </template>
         </el-table-column>
+        <el-table-column label="创建时间" width="160">
+          <template #default="{ row }">
+            {{ formatTime(row.created_at) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="空车称重时间" width="160">
+          <template #default="{ row }">
+            {{ formatTime(row.empty_weighted_at) || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column label="结账时间" width="160">
+          <template #default="{ row }">
+            {{ formatTime(row.completed_at) || '-' }}
+          </template>
+        </el-table-column>
         <el-table-column prop="status" label="状态" width="120">
           <template #default="{ row }">
             <el-tag :type="statusTag(row.status)">{{ statusLabel(row.status) }}</el-tag>
@@ -78,6 +93,11 @@ import api from "@/api"
 const list = ref<any[]>([])
 const startDate = ref("")
 const endDate = ref("")
+
+function formatTime(t: string | null) {
+  if (!t) return "-"
+  return t.replace("T", " ").slice(0, 19)
+}
 
 function statusLabel(s: string) {
   const map: Record<string, string> = {

@@ -3,7 +3,7 @@
     <div class="page-title">农户管理</div>
 
     <el-card>
-      <div style="margin-bottom: 16px; display: flex; gap: 12px;">
+      <div style="margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
         <el-input
           v-model="keyword"
           placeholder="搜索农户姓名"
@@ -12,12 +12,27 @@
           @input="handleSearch"
         />
         <el-button type="primary" @click="showAddDialog = true">新增农户</el-button>
+        <el-button @click="handleExportAll">导出全部</el-button>
+        <el-button
+          type="success"
+          :disabled="selectedIds.length === 0"
+          @click="handleExportSelected"
+        >
+          导出选中 ({{ selectedIds.length }})
+        </el-button>
       </div>
 
-      <el-table :data="list" stripe style="width: 100%">
+      <el-table
+        ref="tableRef"
+        :data="list"
+        stripe
+        style="width: 100%"
+        @selection-change="onSelectionChange"
+      >
+        <el-table-column type="selection" width="50" />
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="phone" label="电话" />
-        <el-table-column prop="car_number" label="车牌号" />
+        <el-table-column prop="id_card" label="身份证号" />
         <el-table-column label="累计售粮重量">
           <template #default="{ row }">
             {{ row.total_weight }} kg
@@ -44,8 +59,8 @@
         <el-form-item label="电话" prop="phone">
           <el-input v-model="addForm.phone" />
         </el-form-item>
-        <el-form-item label="车牌号" prop="car_number">
-          <el-input v-model="addForm.car_number" />
+        <el-form-item label="身份证号" prop="id_card">
+          <el-input v-model="addForm.id_card" maxlength="18" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -62,8 +77,8 @@
         <el-form-item label="电话" prop="phone">
           <el-input v-model="editForm.phone" />
         </el-form-item>
-        <el-form-item label="车牌号" prop="car_number">
-          <el-input v-model="editForm.car_number" />
+        <el-form-item label="身份证号" prop="id_card">
+          <el-input v-model="editForm.id_card" maxlength="18" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -78,6 +93,7 @@
 import { ref, onMounted } from "vue"
 import api from "@/api"
 import { ElMessage } from "element-plus"
+import type { ElTable } from "element-plus"
 
 const list = ref<any[]>([])
 const keyword = ref("")
@@ -87,15 +103,21 @@ const adding = ref(false)
 const editing = ref(false)
 const addFormRef = ref()
 const editFormRef = ref()
+const tableRef = ref<InstanceType<typeof ElTable>>()
+const selectedIds = ref<number[]>([])
 
-const addForm = ref({ name: "", phone: "", car_number: "" })
-const editForm = ref({ name: "", phone: "", car_number: "" })
+const addForm = ref({ name: "", phone: "", id_card: "" })
+const editForm = ref({ name: "", phone: "", id_card: "" })
 
 const addRules = {
   name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
 }
 
 let searchTimer: ReturnType<typeof setTimeout>
+
+function onSelectionChange(rows: any[]) {
+  selectedIds.value = rows.map(r => r.id)
+}
 
 function handleSearch() {
   clearTimeout(searchTimer)
@@ -116,7 +138,7 @@ async function handleAdd() {
     await api.post("/farmers", addForm.value)
     ElMessage.success("农户添加成功")
     showAddDialog.value = false
-    addForm.value = { name: "", phone: "", car_number: "" }
+    addForm.value = { name: "", phone: "", id_card: "" }
     loadList()
   } finally {
     adding.value = false
@@ -124,7 +146,7 @@ async function handleAdd() {
 }
 
 function editFarmer(row: any) {
-  editForm.value = { name: row.name, phone: row.phone || "", car_number: row.car_number || "" }
+  editForm.value = { name: row.name, phone: row.phone || "", id_card: row.id_card || "" }
   editForm.value._id = row.id
   showEditDialog.value = true
 }
@@ -135,13 +157,50 @@ async function handleEdit() {
     await api.put(`/farmers/${editForm.value._id}`, {
       name: editForm.value.name,
       phone: editForm.value.phone || null,
-      car_number: editForm.value.car_number || null,
+      id_card: editForm.value.id_card || null,
     })
     ElMessage.success("农户信息已更新")
     showEditDialog.value = false
     loadList()
   } finally {
     editing.value = false
+  }
+}
+
+async function handleExportAll() {
+  await doExport(null)
+}
+
+async function handleExportSelected() {
+  if (selectedIds.value.length === 0) {
+    ElMessage.warning("请先选择要导出的农户")
+    return
+  }
+  await doExport(selectedIds.value)
+}
+
+async function doExport(farmerIds: number[] | null) {
+  const loading = ElMessage({
+    message: "正在生成导出文件...",
+    icon: "el-icon-loading",
+    duration: 0,
+  })
+  try {
+    const res = await api.post("/farmers/export",
+      { farmer_ids: farmerIds },
+      { responseType: "blob" }
+    )
+    const url = window.URL.createObjectURL(new Blob([res as any]))
+    const link = document.createElement("a")
+    link.href = url
+    const filename = `农户记录_${new Date().toISOString().slice(0, 10)}.xlsx`
+    link.setAttribute("download", filename)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+  } finally {
+    loading.close()
   }
 }
 

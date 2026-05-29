@@ -130,10 +130,10 @@ onMounted(loadData)
 
 <style scoped>
 .stat-value {
-  font-size: 48px;
+  font-size: 32px;
   font-weight: bold;
   color: #1a1a2e;
   text-align: center;
-  padding: 16px 0;
+  padding: 12px 0;
 }
 </style>

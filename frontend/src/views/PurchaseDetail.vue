@@ -22,16 +22,15 @@
         <el-descriptions-item label="净重">
           {{ purchase.net_weight || '-' }} kg
         </el-descriptions-item>
-        <el-descriptions-item label="斤数">
-          {{ purchase.jin_weight || '-' }} 斤
-        </el-descriptions-item>
         <el-descriptions-item label="单价">{{ purchase.unit_price }} 元/斤</el-descriptions-item>
         <el-descriptions-item label="金额">
           <strong style="font-size: 24px; color: #e6a23c;">
             {{ purchase.total_amount || '-' }} 元
           </strong>
         </el-descriptions-item>
-        <el-descriptions-item label="创建时间">{{ purchase.created_at }}</el-descriptions-item>
+        <el-descriptions-item label="创建时间">{{ formatTime(purchase.created_at) }}</el-descriptions-item>
+        <el-descriptions-item label="空车称重时间">{{ formatTime(purchase.empty_weighted_at) || '-' }}</el-descriptions-item>
+        <el-descriptions-item label="结账时间">{{ formatTime(purchase.completed_at) || '-' }}</el-descriptions-item>
       </el-descriptions>
 
       <div style="margin-top: 24px; display: flex; gap: 16px;">
@@ -95,6 +94,11 @@ function statusLabel(s: string) {
     COMPLETED: "已完成",
   }
   return map[s] || s
+}
+
+function formatTime(t: string | null) {
+  if (!t) return "-"
+  return t.replace("T", " ").slice(0, 19)
 }
 
 function statusTag(s: string) {
