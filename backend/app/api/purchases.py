@@ -128,6 +128,18 @@ async def get_by_date_range(
     return ApiResponse(data=result)
 
 
+@router.get("/by-farmer/{farmer_id}")
+async def get_purchases_by_farmer(
+    farmer_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    service = PurchaseService(db)
+    purchases = await service.get_by_farmer_id(farmer_id)
+    result = [await _purchase_to_response(p, db) for p in purchases]
+    return ApiResponse(data=result)
+
+
 @router.get("/{purchase_id}")
 async def get_purchase(
     purchase_id: int,

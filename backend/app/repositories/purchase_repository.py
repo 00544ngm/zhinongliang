@@ -37,3 +37,14 @@ class PurchaseRepository(BaseRepository[Purchase]):
             .order_by(Purchase.created_at.desc())
         )
         return list(result.scalars().all())
+
+    async def get_by_farmer_id(self, farmer_id: int) -> list[Purchase]:
+        result = await self.db.execute(
+            select(Purchase)
+            .where(
+                Purchase.farmer_id == farmer_id,
+                Purchase.deleted == False,
+            )
+            .order_by(Purchase.created_at.desc())
+        )
+        return list(result.scalars().all())

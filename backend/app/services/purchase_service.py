@@ -130,3 +130,6 @@ class PurchaseService:
 
     async def get_pending(self) -> list[Purchase]:
         return await self.purchase_repo.get_by_status("GROSS_WEIGHTED")
+
+    async def get_by_farmer_id(self, farmer_id: int) -> list[Purchase]:
+        return await self.purchase_repo.get_by_farmer_id(farmer_id)

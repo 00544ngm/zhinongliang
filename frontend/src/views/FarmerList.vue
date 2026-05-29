@@ -43,8 +43,9 @@
             {{ row.total_amount }} 元
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="160">
+        <el-table-column label="操作" width="200">
           <template #default="{ row }">
+            <el-button size="small" @click="showDetail(row)">详情</el-button>
             <el-button size="small" @click="editFarmer(row)">编辑</el-button>
           </template>
         </el-table-column>
@@ -86,6 +87,50 @@
         <el-button type="primary" :loading="editing" @click="handleEdit">确认</el-button>
       </template>
     </el-dialog>
+
+    <el-dialog v-model="showDetailDialog" :title="detailTitle" width="80%" top="5vh">
+      <template v-if="detailFarmer">
+        <el-descriptions :column="3" border size="small" style="margin-bottom: 16px;">
+          <el-descriptions-item label="姓名">{{ detailFarmer.name }}</el-descriptions-item>
+          <el-descriptions-item label="电话">{{ detailFarmer.phone || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="身份证号">{{ detailFarmer.id_card || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="累计重量">{{ detailFarmer.total_weight }} kg</el-descriptions-item>
+          <el-descriptions-item label="累计金额">{{ detailFarmer.total_amount }} 元</el-descriptions-item>
+          <el-descriptions-item label="收购次数">{{ detailPurchases.length }} 次</el-descriptions-item>
+        </el-descriptions>
+
+        <el-table :data="detailPurchases" stripe style="width: 100%" v-loading="detailLoading">
+          <el-table-column prop="id" label="单号" width="80" />
+          <el-table-column prop="grain_type" label="品种" width="80" />
+          <el-table-column label="毛重">
+            <template #default="{ row }">{{ row.gross_weight }} kg</template>
+          </el-table-column>
+          <el-table-column label="皮重">
+            <template #default="{ row }">{{ row.empty_weight || '-' }} kg</template>
+          </el-table-column>
+          <el-table-column label="净重">
+            <template #default="{ row }">{{ row.net_weight || '-' }} kg</template>
+          </el-table-column>
+          <el-table-column label="单价">
+            <template #default="{ row }">{{ row.unit_price }} 元/斤</template>
+          </el-table-column>
+          <el-table-column label="金额">
+            <template #default="{ row }">{{ row.total_amount || '-' }} 元</template>
+          </el-table-column>
+          <el-table-column label="状态" width="100">
+            <template #default="{ row }">
+              <el-tag :type="statusTag(row.status)">{{ statusLabel(row.status) }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column label="创建时间" width="150">
+            <template #default="{ row }">{{ formatTime(row.created_at) }}</template>
+          </el-table-column>
+          <el-table-column label="结账时间" width="150">
+            <template #default="{ row }">{{ formatTime(row.completed_at) || '-' }}</template>
+          </el-table-column>
+        </el-table>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -105,6 +150,12 @@ const addFormRef = ref()
 const editFormRef = ref()
 const tableRef = ref<InstanceType<typeof ElTable>>()
 const selectedIds = ref<number[]>([])
+
+const showDetailDialog = ref(false)
+const detailFarmer = ref<any>(null)
+const detailPurchases = ref<any[]>([])
+const detailLoading = ref(false)
+const detailTitle = ref("")
 
 const addForm = ref({ name: "", phone: "", id_card: "" })
 const editForm = ref({ name: "", phone: "", id_card: "" })
@@ -164,6 +215,43 @@ async function handleEdit() {
     loadList()
   } finally {
     editing.value = false
+  }
+}
+
+function statusLabel(s: string) {
+  const map: Record<string, string> = {
+    GROSS_WEIGHTED: "已称毛重",
+    PRICED: "已报价",
+    UNLOADED: "已卸粮",
+    EMPTY_WEIGHTED: "已称空车",
+    COMPLETED: "已完成",
+  }
+  return map[s] || s
+}
+
+function statusTag(s: string) {
+  if (s === "COMPLETED") return "success"
+  if (s === "EMPTY_WEIGHTED") return "warning"
+  return "info"
+}
+
+function formatTime(t: string | null) {
+  if (!t) return "-"
+  return t.replace("T", " ").slice(0, 19)
+}
+
+async function showDetail(row: any) {
+  detailFarmer.value = row
+  detailTitle.value = `农户详情 - ${row.name}`
+  detailLoading.value = true
+  showDetailDialog.value = true
+  try {
+    const res: any = await api.get(`/purchases/by-farmer/${row.id}`)
+    detailPurchases.value = res.data
+  } catch {
+    detailPurchases.value = []
+  } finally {
+    detailLoading.value = false
   }
 }
 
