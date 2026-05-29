@@ -157,8 +157,15 @@ const detailPurchases = ref<any[]>([])
 const detailLoading = ref(false)
 const detailTitle = ref("")
 
-const addForm = ref({ name: "", phone: "", id_card: "" })
-const editForm = ref({ name: "", phone: "", id_card: "" })
+type FarmerForm = {
+  _id?: number
+  name: string
+  phone: string
+  id_card: string
+}
+
+const addForm = ref<FarmerForm>({ name: "", phone: "", id_card: "" })
+const editForm = ref<FarmerForm>({ name: "", phone: "", id_card: "" })
 
 const addRules = {
   name: [{ required: true, message: "请输入姓名", trigger: "blur" }],

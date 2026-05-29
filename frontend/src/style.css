@@ -1,9 +1,18 @@
-/* 智农粮 - 适老化大字体样式 */
 :root {
   --znl-font-size: 18px;
   --znl-title-size: 28px;
   --znl-btn-size: 20px;
   --znl-card-padding: 24px;
+  --znl-ink: #123246;
+  --znl-muted: #5f7e8f;
+  --znl-blue: #63bdf3;
+  --znl-blue-deep: #227db7;
+  --znl-mint: #7fcfb6;
+  --znl-amber: #d9a441;
+  --znl-glass: rgba(244, 252, 255, 0.62);
+  --znl-glass-strong: rgba(248, 253, 255, 0.82);
+  --znl-glass-border: rgba(255, 255, 255, 0.7);
+  --znl-shadow: 0 18px 50px rgba(44, 122, 166, 0.16);
 }
 
 * {
@@ -19,15 +28,39 @@ html {
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
     "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  background-color: #f5f7fa;
-  color: #333;
+  min-width: 1180px;
+  background: #d9f3ff;
+  color: var(--znl-ink);
   -webkit-font-smoothing: antialiased;
 }
 
-/* 大字体全局覆盖 */
+#app {
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(99, 189, 243, 0.32);
+}
+
 .el-button {
   font-size: var(--znl-btn-size) !important;
   padding: 14px 28px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+}
+
+.el-button--primary {
+  --el-button-bg-color: rgba(64, 158, 255, 0.86);
+  --el-button-border-color: rgba(91, 181, 239, 0.9);
+  --el-button-hover-bg-color: rgba(37, 139, 209, 0.9);
+  --el-button-hover-border-color: rgba(37, 139, 209, 0.9);
+  box-shadow: 0 12px 24px rgba(48, 143, 204, 0.18);
+}
+
+.el-button.is-link {
+  padding: 6px 8px !important;
+  border-radius: 8px !important;
+  box-shadow: none;
 }
 
 .el-input__inner {
@@ -35,20 +68,62 @@ body {
   height: 48px !important;
 }
 
+.el-input__wrapper,
+.el-select__wrapper,
+.el-textarea__inner {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-radius: 12px !important;
+  box-shadow: inset 0 0 0 1px rgba(133, 199, 230, 0.42) !important;
+  backdrop-filter: blur(18px);
+}
+
+.el-input__wrapper.is-focus,
+.el-select__wrapper.is-focused,
+.el-textarea__inner:focus {
+  box-shadow: inset 0 0 0 2px rgba(80, 176, 232, 0.78) !important;
+}
+
 .el-table {
   font-size: 16px !important;
+  border-radius: 14px !important;
+  overflow: hidden;
+  --el-table-bg-color: rgba(255, 255, 255, 0.52);
+  --el-table-tr-bg-color: rgba(255, 255, 255, 0.36);
+  --el-table-header-bg-color: rgba(219, 244, 255, 0.78);
+  --el-table-row-hover-bg-color: rgba(210, 240, 255, 0.68);
+  --el-table-border-color: rgba(137, 197, 225, 0.36);
+  backdrop-filter: blur(18px);
 }
 
 .el-card {
   font-size: var(--znl-font-size) !important;
+  border-radius: 16px !important;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.76),
+    rgba(221, 245, 255, 0.48)
+  ) !important;
+  border: 1px solid var(--znl-glass-border) !important;
+  box-shadow: var(--znl-shadow) !important;
+  backdrop-filter: blur(22px) saturate(1.25);
+}
+
+.el-card__header {
+  border-bottom: 1px solid rgba(137, 197, 225, 0.34) !important;
+  color: var(--znl-ink);
 }
 
 .el-form-item__label {
   font-size: var(--znl-font-size) !important;
+  color: var(--znl-ink) !important;
 }
 
 .el-dialog {
   --el-dialog-content-font-size: var(--znl-font-size);
+  border-radius: 18px !important;
+  background: rgba(247, 253, 255, 0.86) !important;
+  box-shadow: 0 24px 70px rgba(35, 110, 156, 0.22) !important;
+  backdrop-filter: blur(24px);
 }
 
 .el-statistic__number {
@@ -56,17 +131,16 @@ body {
   font-weight: bold !important;
 }
 
-/* 高对比度 */
-.el-card,
-.el-table,
-.el-dialog {
-  border: 2px solid #dcdfe6 !important;
+.el-tag {
+  border-radius: 999px !important;
+  font-weight: 700;
 }
 
-/* 页面标题 */
 .page-title {
   font-size: var(--znl-title-size);
-  font-weight: bold;
+  font-weight: 800;
   margin-bottom: 20px;
-  color: #1a1a2e;
+  color: var(--znl-ink);
+  letter-spacing: 0;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.82);
 }
