@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, BigInteger, String, Numeric, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, BigInteger, String, Numeric, Boolean, DateTime, ForeignKey, Index
 from app.models.base import Base
 
 
@@ -20,3 +20,8 @@ class Purchase(Base):
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
     empty_weighted_at = Column(DateTime)
     completed_at = Column(DateTime)
+
+
+Index("idx_purchases_created_deleted", Purchase.created_at, Purchase.deleted)
+Index("idx_purchases_status_deleted", Purchase.status, Purchase.deleted)
+Index("idx_purchases_farmer_deleted", Purchase.farmer_id, Purchase.deleted)

@@ -30,11 +30,11 @@ class FarmerService:
         )
         await self.db.flush()
 
-    async def get_all(self) -> list[Farmer]:
-        return await self.repo.list()
+    async def get_all(self, offset: int = 0, limit: int = 200) -> list[Farmer]:
+        return await self.repo.list(skip=offset, limit=limit)
 
-    async def search(self, keyword: str) -> list[Farmer]:
-        return await self.repo.search_by_name(keyword)
+    async def search(self, keyword: str, offset: int = 0, limit: int = 200) -> list[Farmer]:
+        return await self.repo.search_by_name(keyword, offset=offset, limit=limit)
 
     async def get_by_id(self, farmer_id: int) -> Farmer | None:
         return await self.repo.get_by_id(farmer_id)

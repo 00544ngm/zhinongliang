@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, BigInteger, String, Numeric, DateTime, text
+from sqlalchemy import Column, BigInteger, String, Numeric, DateTime, Index, text
 from app.models.base import Base
 
 
@@ -16,3 +16,6 @@ class Farmer(Base):
     total_amount = Column(Numeric(14, 2), default=0)
     deleted = Column(String(1), default="0")
     created_at = Column(DateTime, default=datetime.now)
+
+
+Index("idx_farmers_name_deleted", Farmer.name, Farmer.deleted)

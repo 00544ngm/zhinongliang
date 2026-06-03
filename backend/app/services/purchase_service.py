@@ -119,17 +119,17 @@ class PurchaseService:
         )
         return purchase
 
-    async def get_today(self) -> list[Purchase]:
-        return await self.purchase_repo.get_today()
+    async def get_today(self, offset: int = 0, limit: int = 200) -> list[Purchase]:
+        return await self.purchase_repo.get_today(offset=offset, limit=limit)
 
-    async def get_by_date_range(self, start: date, end: date) -> list[Purchase]:
-        return await self.purchase_repo.get_by_date_range(start, end)
+    async def get_by_date_range(self, start: date, end: date, offset: int = 0, limit: int = 200) -> list[Purchase]:
+        return await self.purchase_repo.get_by_date_range(start, end, offset=offset, limit=limit)
 
     async def get_by_id(self, purchase_id: int) -> Purchase | None:
         return await self.purchase_repo.get_by_id(purchase_id)
 
-    async def get_pending(self) -> list[Purchase]:
-        return await self.purchase_repo.get_by_status("GROSS_WEIGHTED")
+    async def get_pending(self, offset: int = 0, limit: int = 200) -> list[Purchase]:
+        return await self.purchase_repo.get_by_status("GROSS_WEIGHTED", offset=offset, limit=limit)
 
-    async def get_by_farmer_id(self, farmer_id: int) -> list[Purchase]:
-        return await self.purchase_repo.get_by_farmer_id(farmer_id)
+    async def get_by_farmer_id(self, farmer_id: int, offset: int = 0, limit: int = 200) -> list[Purchase]:
+        return await self.purchase_repo.get_by_farmer_id(farmer_id, offset=offset, limit=limit)

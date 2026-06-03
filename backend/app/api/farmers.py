@@ -27,14 +27,16 @@ class ExportRequest(BaseModel):
 @router.get("")
 async def list_farmers(
     keyword: str | None = None,
+    offset: int = 0,
+    limit: int = 200,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     service = FarmerService(db)
     if keyword:
-        farmers = await service.search(keyword)
+        farmers = await service.search(keyword, offset=offset, limit=min(limit, 500))
     else:
-        farmers = await service.get_all()
+        farmers = await service.get_all(offset=offset, limit=min(limit, 500))
     return ApiResponse(data=[FarmerResponse.model_validate(f) for f in farmers])
 
 
