@@ -1,5 +1,5 @@
 <template>
-  <el-container class="app-shell" :style="{ '--app-bg-image': backgroundImage }">
+  <el-container class="app-shell" :style="{ '--app-bg-image': backgroundImage, '--app-overlay-opacity': overlayOpacity }">
     <el-aside width="260px" class="app-aside">
       <div class="logo">马西军粮食收购站系统</div>
       <el-menu
@@ -78,6 +78,17 @@
             />
           </div>
         </el-form-item>
+        <el-form-item label="遮罩透明度">
+          <el-slider
+            v-model="draftOpacity"
+            :min="0"
+            :max="1"
+            :step="0.05"
+            show-input
+            :format-tooltip="(v: number) => `${Math.round(v * 100)}%`"
+          />
+          <span class="opacity-hint">降低透明度让背景图片更清晰，提高让文字更易读</span>
+        </el-form-item>
         <el-form-item label="图片地址">
           <el-input
             v-model="draftBackgroundUrl"
@@ -118,11 +129,12 @@ interface BackgroundPhoto {
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
-const { backgroundUrl, backgroundImage, setBackgroundUrl, resetBackground } =
+const { backgroundUrl, backgroundImage, overlayOpacity, setBackgroundUrl, resetBackground, setOverlayOpacity } =
   useBackground()
 
 const backgroundDialogVisible = ref(false)
 const draftBackgroundUrl = ref("")
+const draftOpacity = ref(0.6)
 const backgroundPhotos = ref<BackgroundPhoto[]>([])
 const backgroundPhotosLoading = ref(false)
 
@@ -133,6 +145,7 @@ function handleLogout() {
 
 function openBackgroundDialog() {
   draftBackgroundUrl.value = backgroundUrl.value
+  draftOpacity.value = overlayOpacity.value
   backgroundDialogVisible.value = true
   loadBackgroundPhotos()
 }
@@ -155,6 +168,7 @@ function selectBackgroundPhoto(url: string) {
 
 function saveBackgroundUrl() {
   setBackgroundUrl(draftBackgroundUrl.value)
+  setOverlayOpacity(draftOpacity.value)
   backgroundDialogVisible.value = false
 }
 
@@ -181,6 +195,7 @@ function resetBackgroundUrl() {
   z-index: 0;
   pointer-events: none;
   content: "";
+  opacity: var(--app-overlay-opacity, 0.6);
   background:
     linear-gradient(120deg, rgba(237, 252, 255, 0.7), rgba(209, 239, 255, 0.34)),
     radial-gradient(circle at 74% 18%, rgba(255, 255, 255, 0.58), transparent 26%);
@@ -282,6 +297,14 @@ function resetBackgroundUrl() {
   min-height: calc(100vh - 88px);
   padding: 24px;
   background: transparent;
+}
+
+.opacity-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #8492a6;
+  line-height: 1.4;
 }
 
 .photo-section-title {

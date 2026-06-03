@@ -74,10 +74,13 @@
             <el-tag :type="statusTag(row.status)">{{ statusLabel(row.status) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column label="操作" width="180">
           <template #default="{ row }">
             <el-button size="small" @click="$router.push(`/purchases/${row.id}`)">
               详情
+            </el-button>
+            <el-button size="small" type="danger" plain @click="handleDelete(row)">
+              删除
             </el-button>
           </template>
         </el-table-column>
@@ -89,6 +92,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
 import api from "@/api"
+import { ElMessage, ElMessageBox } from "element-plus"
 
 const list = ref<any[]>([])
 const startDate = ref("")
@@ -128,6 +132,25 @@ async function resetSearch() {
   startDate.value = ""
   endDate.value = ""
   loadToday()
+}
+
+async function handleDelete(row: any) {
+  try {
+    await ElMessageBox.confirm(
+      `确认删除单号 #${row.id}（${row.farmer_name || "无农户"}）？此操作不可撤销。`,
+      "删除确认",
+      { confirmButtonText: "删除", cancelButtonText: "取消", type: "warning" },
+    )
+  } catch {
+    return
+  }
+  try {
+    await api.delete(`/purchases/${row.id}`)
+    ElMessage.success("已删除")
+    list.value = list.value.filter((item) => item.id !== row.id)
+  } catch {
+    // handled by interceptor
+  }
 }
 
 async function loadToday() {

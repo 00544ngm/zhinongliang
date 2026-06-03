@@ -45,6 +45,9 @@
             完成收购
           </el-button>
         </template>
+        <el-button type="danger" size="large" plain :loading="deleting" @click="handleDelete" style="margin-left: auto;">
+          删除
+        </el-button>
       </div>
     </el-card>
 
@@ -73,16 +76,18 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import api from "@/api"
-import { ElMessage } from "element-plus"
+import { ElMessage, ElMessageBox } from "element-plus"
 
 const route = useRoute()
+const router = useRouter()
 const purchase = ref<any>(null)
 const showWeightDialog = ref(false)
 const emptyWeight = ref(0)
 const submitting = ref(false)
 const completing = ref(false)
+const deleting = ref(false)
 
 function statusLabel(s: string) {
   const map: Record<string, string> = {
@@ -133,6 +138,28 @@ async function handleComplete() {
     // handled
   } finally {
     completing.value = false
+  }
+}
+
+async function handleDelete() {
+  try {
+    await ElMessageBox.confirm(
+      `确认删除收购单 #${purchase.value.id}？此操作不可撤销。`,
+      "删除确认",
+      { confirmButtonText: "删除", cancelButtonText: "取消", type: "warning" },
+    )
+  } catch {
+    return
+  }
+  deleting.value = true
+  try {
+    await api.delete(`/purchases/${purchase.value.id}`)
+    ElMessage.success("收购单已删除")
+    router.push("/purchases")
+  } catch {
+    // handled by interceptor
+  } finally {
+    deleting.value = false
   }
 }
 

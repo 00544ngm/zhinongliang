@@ -16,6 +16,8 @@ services:
 
   backend:
     build: ./backend
+    volumes:
+      - ./photos:/frontend/public/photos
     environment:
       DB_HOST: db
       DB_PORT: 5432

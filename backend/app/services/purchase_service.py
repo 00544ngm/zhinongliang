@@ -119,6 +119,32 @@ class PurchaseService:
         )
         return purchase
 
+    async def delete(self, purchase_id: int, user_id: int = 0) -> None:
+        purchase = await self.purchase_repo.get_by_id(purchase_id)
+        if not purchase or purchase.deleted:
+            raise ValueError("收购单不存在")
+
+        purchase.deleted = True
+
+        if purchase.status == "COMPLETED" and purchase.net_weight:
+            await self.inventory_service.remove_stock(
+                grain_type=purchase.grain_type,
+                weight=purchase.net_weight,
+            )
+
+        await self.log_service.log(
+            user_id=user_id,
+            operation_type="DELETE_PURCHASE",
+            target_type="Purchase",
+            target_id=purchase.id,
+            old_data={
+                "status": purchase.status,
+                "grain_type": purchase.grain_type,
+                "net_weight": str(purchase.net_weight) if purchase.net_weight else None,
+            },
+        )
+        await self.db.flush()
+
     async def get_today(self, offset: int = 0, limit: int = 200) -> list[Purchase]:
         return await self.purchase_repo.get_today(offset=offset, limit=limit)
 

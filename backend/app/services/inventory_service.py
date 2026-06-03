@@ -13,6 +13,11 @@ class InventoryService:
             return
         await self.repo.add_weight(grain_type, weight)
 
+    async def remove_stock(self, grain_type: str, weight: Decimal):
+        if weight is None:
+            return
+        await self.repo.subtract_weight(grain_type, weight)
+
     async def get_all(self) -> list:
         return await self.repo.list()
 

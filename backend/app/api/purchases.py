@@ -191,3 +191,17 @@ async def get_purchase(
         raise HTTPException(status_code=404, detail="收购单不存在")
     data = await _purchase_to_response(purchase, db)
     return ApiResponse(data=data)
+
+
+@router.delete("/{purchase_id}")
+async def delete_purchase(
+    purchase_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    service = PurchaseService(db)
+    try:
+        await service.delete(purchase_id=purchase_id, user_id=current_user.id)
+        return ApiResponse(message="收购单已删除")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))

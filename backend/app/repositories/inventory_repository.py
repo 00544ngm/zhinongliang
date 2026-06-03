@@ -27,3 +27,16 @@ class InventoryRepository(BaseRepository[Inventory]):
             inv = Inventory(grain_type=grain_type, total_weight=weight)
             self.db.add(inv)
         await self.db.flush()
+
+    async def subtract_weight(self, grain_type: str, weight: Decimal):
+        existing = await self.get_by_grain_type(grain_type)
+        if existing:
+            new_weight = existing.total_weight - weight
+            if new_weight < 0:
+                new_weight = Decimal("0")
+            await self.db.execute(
+                update(Inventory)
+                .where(Inventory.grain_type == grain_type)
+                .values(total_weight=new_weight)
+            )
+            await self.db.flush()
