@@ -22,8 +22,12 @@ services:
       DB_USER: znl
       DB_PASSWORD: znl123
       DB_NAME: znl_db
+      SECRET_KEY: change-this-in-production-znl-2024-is-long-enough
+      CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173,http://114.55.111.133
+      DEBUG: "false"
     depends_on:
-      - db
+      db:
+        condition: service_started
     restart: unless-stopped
 
   frontend:
