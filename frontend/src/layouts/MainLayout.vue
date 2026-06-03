@@ -44,7 +44,9 @@
       </el-header>
 
       <el-main class="app-main">
-        <router-view />
+        <div class="glass-content">
+          <router-view />
+        </div>
       </el-main>
     </el-container>
 
@@ -295,8 +297,18 @@ function resetBackgroundUrl() {
 
 .app-main {
   min-height: calc(100vh - 88px);
-  padding: 24px;
+  padding: 24px 20px;
   background: transparent;
+}
+
+.glass-content {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(244, 252, 255, 0.42));
+  border: 1px solid var(--znl-glass-border);
+  border-radius: 18px;
+  box-shadow: var(--znl-shadow);
+  backdrop-filter: blur(24px) saturate(1.25);
+  padding: 28px;
+  min-height: calc(100vh - 136px);
 }
 
 .opacity-hint {
