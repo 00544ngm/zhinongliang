@@ -51,7 +51,7 @@
       </div>
     </el-card>
 
-    <el-dialog v-model="showWeightDialog" title="称空车" width="400px">
+    <el-dialog v-model="showWeightDialog" title="称空车" width="400px" top="5vh" :lock-scroll="false">
       <el-form>
         <el-form-item label="空车重量(KG)">
           <el-input-number

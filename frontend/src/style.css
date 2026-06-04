@@ -124,6 +124,14 @@ body {
   background: rgba(247, 253, 255, 0.86) !important;
   box-shadow: 0 24px 70px rgba(35, 110, 156, 0.22) !important;
   backdrop-filter: blur(24px);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.el-dialog__body {
+  overflow-y: auto;
+  max-height: calc(90vh - 130px);
 }
 
 .el-statistic__number {
