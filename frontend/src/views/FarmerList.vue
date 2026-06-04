@@ -52,7 +52,7 @@
       </el-table>
     </el-card>
 
-    <el-dialog v-model="showAddDialog" title="新增农户" width="400px">
+    <el-dialog v-model="showAddDialog" title="新增农户" width="400px" top="5vh" :lock-scroll="false">
       <el-form ref="addFormRef" :model="addForm" :rules="addRules">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="addForm.name" />
@@ -70,7 +70,7 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="showEditDialog" title="编辑农户" width="400px">
+    <el-dialog v-model="showEditDialog" title="编辑农户" width="400px" top="5vh" :lock-scroll="false">
       <el-form ref="editFormRef" :model="editForm">
         <el-form-item label="姓名" prop="name">
           <el-input v-model="editForm.name" />
@@ -88,7 +88,7 @@
       </template>
     </el-dialog>
 
-    <el-dialog v-model="showDetailDialog" :title="detailTitle" width="80%" top="5vh">
+    <el-dialog v-model="showDetailDialog" :title="detailTitle" width="80%" top="5vh" :lock-scroll="false">
       <template v-if="detailFarmer">
         <el-descriptions :column="3" border size="small" style="margin-bottom: 16px;">
           <el-descriptions-item label="姓名">{{ detailFarmer.name }}</el-descriptions-item>

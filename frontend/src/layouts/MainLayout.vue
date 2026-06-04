@@ -50,7 +50,7 @@
       </el-main>
     </el-container>
 
-    <el-dialog v-model="backgroundDialogVisible" title="更换背景" width="620px">
+    <el-dialog v-model="backgroundDialogVisible" title="更换背景" width="620px" top="5vh" :lock-scroll="false">
       <el-form label-position="top">
         <el-form-item>
           <template #label>
