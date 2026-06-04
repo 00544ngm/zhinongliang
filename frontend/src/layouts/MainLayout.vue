@@ -184,7 +184,6 @@ function resetBackgroundUrl() {
 .app-shell {
   position: relative;
   min-height: 100vh;
-  overflow: hidden;
   background-image: var(--app-bg-image);
   background-position: center;
   background-size: cover;
